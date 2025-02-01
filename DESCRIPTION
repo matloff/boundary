@@ -1,2 +1,19 @@
-
-
+Package: boundary
+Version: 0.0.1
+Title: Confidence Interval Estimation at y=0 for Linear Regression Models
+Authors@R: c(
+  person("Ray", "Zhu", email = "rayzhuca@email.com", role = c("aut", "cre")),
+  person("Norm", "Matloff", email = "matloff@cs.ucdavis.edu", 
+         role = c("aut"), 
+         comment = c(ORCID = "0000-0001-9179-6785")))
+Depends: 
+    R (>= 3.5.0),
+    nloptr,
+    plotly
+Imports: stats
+Description: This package implements statistical methods for estimating confidence intervals of the 
+    at y=0 in linear regression models. Provides both delta method and Lagrange multiplier approaches.
+    Also includes utilities for 3D visualization of results.
+License: GPL (>= 2)
+URL: https://github.com/matloff/boundary
+BugReports: https://github.com/matloff/boundary/issues

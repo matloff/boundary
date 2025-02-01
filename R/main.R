@@ -164,12 +164,14 @@ plot_accuracy_vs_points <- function(accuracy_rates) {
     abline(a = b, b = m, col = "red")
 }
 
-confidence <- 0.95
-n_values <- seq(10, 100001, 10000)
-trials <- 100
+run_example <- function() {
+    confidence <- 0.95
+    n_values <- seq(10, 100001, 10000)
+    trials <- 100
 
-# n_values <- seq(10, 12, 1)
-# trials <- 1
+    # n_values <- seq(10, 12, 1)
+    # trials <- 1
 
-accuracy_rates <- calculate_accuracy_rates(n_values, confidence, trials)
-plot_accuracy_vs_points(accuracy_rates)
+    accuracy_rates <- calculate_accuracy_rates(n_values, confidence, trials)
+    plot_accuracy_vs_points(accuracy_rates)
+}
