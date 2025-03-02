@@ -110,7 +110,7 @@ plot_data <- function(X, y, b, confidence_interval, show_plane = FALSE) {
     print(plot)
 }
 
-calculate_accuracy_rates <- function(n_values, confidence, trials) {
+calculate_accuracy_rates <- function(n_values, confidence, trials, method = "delta") {
     accuracy_rates <- list()
     for (n in n_values) {
         accurate <- 0
@@ -124,24 +124,17 @@ calculate_accuracy_rates <- function(n_values, confidence, trials) {
             x2 <- points$x2
 
             epsilon <- add_random_noise(n, sigma = 10)
-
             y <- beta1 * x1 + beta2 * x2 + epsilon
             X <- cbind(x1, x2)
             b <- estimate_b(X, y)
 
-
-            y_pred <- b[1] * x1 + b[2] * x2
-
-            # confidence_interval <- calculate_confidence_interval_by_delta_method(X, y, b, confidence)
-            # print("Delta method: ")
-            # print(confidence_interval)
-            confidence_interval <- calculate_confidence_interval_by_langrange_multipliers(X, y, b, confidence)
-            # print("Langrange multipliers method: ")
-            # print(confidence_interval)
-            # print("True: ")
-            # print(-beta1 / beta2)
-
-            # plot_data(X, y, b, confidence_interval)
+            if (method == "delta") {
+                confidence_interval <- calculate_confidence_interval_by_delta_method(X, y, b, confidence)
+            } else if (method == "lagrange") {
+                confidence_interval <- calculate_confidence_interval_by_langrange_multipliers(X, y, b, confidence)
+            } else {
+                stop("Invalid method. Use 'delta' or 'lagrange'.")
+            }
 
             if (check_accuracy(beta1, beta2, confidence_interval)) {
                 accurate <- accurate + 1

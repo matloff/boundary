@@ -1,2 +1,8 @@
-
-
+export(aboveAndBelowC)
+export(calculate_confidence_interval_by_delta_method)
+export(calculate_confidence_interval_by_langrange_multipliers)
+export(plot_data)
+export(run_example)
+import(cdparcoord)
+import(nloptr)
+import(plotly)
