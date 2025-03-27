@@ -19,11 +19,47 @@ The **boundary** package provides tools to estimate and visualize the uncertaint
 
 In addition, the package includes functions for data generation, coefficient estimation, and 3D interactive visualization.
 
+## Theory
+
+The decision boundary is defined as the set of points where the linear predictor equals zero.
+For a regression model of the form $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2$, the boundary
+where $y = 0$ is given by $y = - \beta_1 / \beta_2$.
+
+### Delta Method
+
+The package exports a function `calculate_confidence_interval_by_delta_method` which calculates the confidence interval of $\beta_1 / \beta_2$
+via the delta method.
+
+The method estimates the variance by
+
+$$
+s^2 = \nabla g^T \Sigma \nabla g
+$$
+
+where
+
+$$
+\nabla g = \left( -1/\beta_1, \beta_1/beta_2^2 \right) .
+$$
+
+The confidence band is then calculated via using the normal quantile around $b_1 / b_2$, where $b_1$ and $b_2$
+is the estimated regression coefficients of $\beta_1$ and $beta_2$.
+
+### Lagrange Multiplers Method
+
+The alternative approach, `calculate_confidence_interval_by_langrange_multipliers`, uses Lagrange multipliers to determine the bounds on the decision boundary. We find the extrema of the transformed parameter $\beta_1 / \beta_2$ subject to the constraint:
+\[
+(b - \beta)^T \Sigma^{-1} (b - \beta) \leq q,
+\]
+where \(q\) is derived from an F-distribution quantile based on the desired confidence level.
+
+We solve this constrained optimization problem via `ccsaq` from the `nloptr` package. The method then returns the smallest and largest values of \(-\beta_1/\beta_2\) that are compatible with the constraint. This technique may be more robust in cases where the normal approximation may not be ideal.
+
 ## Example
 
 In this example, we generate a linear model with two predictors, simulate data, estimate regression coefficients, compute confidence intervals for the decision boundary (where $y=0$), and visualize the results.
 
-``` r
+```r
 # Generate true regression coefficients
 linear_function <- generate_linear_function()
 beta1 <- linear_function$beta1
