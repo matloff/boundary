@@ -45,11 +45,11 @@ calculate_confidence_interval_by_delta_method <- function(X, y, b, confidence) {
 }
 
 # Solve for maximum of -Beta[1] / Beta[2] where (b - Beta)^T * Sigma * (b - Beta) <= q using Lagrange multipliers
-calculate_confidence_interval_by_langrange_multipliers <- function(X, y, b, confidence) {
+calculate_confidence_interval_by_lagrange_multipliers <- function(X, y, b, confidence) {
     Sigma <- calculate_Sigma(X, y, b)
     p <- ncol(X)
     n <- length(y)
-    q <- qf(confidence, p + 1, n - p - 1)
+    q <- qf((1 + confidence) / 2, p + 1, n - p - 1)
     f_min <- function(beta) {
         return(-beta[1] / beta[2])
     }
@@ -131,7 +131,7 @@ calculate_accuracy_rates <- function(n_values, confidence, trials, method = "del
             if (method == "delta") {
                 confidence_interval <- calculate_confidence_interval_by_delta_method(X, y, b, confidence)
             } else if (method == "lagrange") {
-                confidence_interval <- calculate_confidence_interval_by_langrange_multipliers(X, y, b, confidence)
+                confidence_interval <- calculate_confidence_interval_by_lagrange_multipliers(X, y, b, confidence)
             } else {
                 stop("Invalid method. Use 'delta' or 'lagrange'.")
             }
@@ -155,16 +155,4 @@ plot_accuracy_vs_points <- function(accuracy_rates) {
 
     plot(n_values, accuracy_values, type = "l", xlab = "Number of Points", ylab = "Accuracy Rate")
     abline(a = b, b = m, col = "red")
-}
-
-run_example <- function() {
-    confidence <- 0.95
-    n_values <- seq(10, 100001, 10000)
-    trials <- 100
-
-    # n_values <- seq(10, 12, 1)
-    # trials <- 1
-
-    accuracy_rates <- calculate_accuracy_rates(n_values, confidence, trials)
-    plot_accuracy_vs_points(accuracy_rates)
 }
