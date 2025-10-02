@@ -4,7 +4,7 @@ library(dplyr)
 library(qeML)
 
 get_points_with_target <- function(k, df, target_col, target_min, target_max) {
-  nn_indices <- get.knn(df, k)$nn.index
+  nn_indices <- get.knnx(df, df, k)$nn.index
   target_vals <- df[[target_col]]
   neighbor_target_vals <- matrix(target_vals[nn_indices], nrow=nrow(df))
   df$est_mean <- rowMeans(neighbor_target_vals)
@@ -20,8 +20,14 @@ scale_features <- function(df, target_col) {
   df
 }
 
-draw_boundary <- function(k, df, target_col, target_min, target_max, graph_at_once = TRUE) {
-  df <- factorsToDummies(df, omitLast=TRUE, dfOut=TRUE)
+draw_boundary <- function(k, df, target_col, target_min, target_max, 
+                          include_factors = FALSE, graph_at_once = TRUE) {
+  if (include_factors) {
+    df <- factorsToDummies(df, omitLast=TRUE, dfOut=TRUE)
+  } else {
+    numeric_cols <- sapply(df, is.numeric)
+    df <- df[, numeric_cols]
+  }
   
   target_min <- target_min - mean(df[[target_col]])
   target_max <- target_max - mean(df[[target_col]])
